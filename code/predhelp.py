@@ -2,6 +2,8 @@ from pyaxis import pyaxis
 import pandas as pd
 import numpy as np
 from sklearn.impute import KNNImputer
+from sklearn.impute import IterativeImputer
+from sklearn import linear_model
 
 datelist = [pd.Timestamp('2013-01-01 00:00:00'),
  pd.Timestamp('2013-02-01 00:00:00'),
@@ -222,10 +224,10 @@ def dict_clean (px_data_url, regions):
             if dict_regions[k][regions[k]].iloc[i]['month'] in trans_months.keys():
                 dict_regions[k][regions[k]].at[i,'month'] = trans_months[dict_regions[k][regions[k]].iloc[i]['month']]
     for i in range(0, len(dict_regions)):
-        dict_regions[i][regions[i]]['date'] = pd.to_datetime(dict_regions[i][regions[i]][['year','month']].assign(DAY = 1))
+        dict_regions[i][regions[i]]['DATE'] = pd.to_datetime(dict_regions[i][regions[i]][['year','month']].assign(DAY = 1))
         dict_regions[i][regions[i]].drop(labels = ['year', 'month'], axis = 1, inplace = True)
     for i in range(0, len(dict_regions)):
-        dict_regions[i][regions[i]] = dict_regions[i][regions[i]].pivot(index =  ['date'],columns = 'Herkunftsland', values = 'DATA').reset_index().rename_axis(None, axis=1)
+        dict_regions[i][regions[i]] = dict_regions[i][regions[i]].pivot(index =  ['DATE'],columns = 'Herkunftsland', values = 'DATA').reset_index().rename_axis(None, axis=1)
      
     return(dict_regions, all_regions)
 
@@ -264,9 +266,9 @@ def gdp_clean (csv_data_url):
 
 def forex_clean (csv_data_url):
     exchange_rate = pd.read_csv(f"{csv_data_url}", sep = ";", skiprows = 2)
-    exchange_rate[["y","m"]] = exchange_rate["Date"].str.split("-",expand=True)
+    exchange_rate[["y","m"]] = exchange_rate["DATE"].str.split("-",expand=True)
     exchange_rate["y"] = exchange_rate["y"].astype(int)
-    del exchange_rate["Date"]
+    del exchange_rate["DATE"]
     del exchange_rate["D0"]
     exchange_rate = exchange_rate.loc[exchange_rate["y"]>=2013].reset_index()
     exchange_rate_wide = exchange_rate.pivot(index=["y", "m"], columns="D1", values="Value").reset_index().rename_axis(None, axis=1)
@@ -286,9 +288,9 @@ def ppi_clean(ppi_data_csv_url):
     PPI.drop(labels = ['INDICATOR','SUBJECT','MEASURE','FREQUENCY','Flag Codes'], axis = 1, inplace = True)
     del PPI["TIME"]
     PPI = PPI.loc[PPI["y"]>=2013].reset_index()
-    PPI_wide = PPI.pivot(index=["y", "m"], columns=[2], values="Value").reset_index().rename_axis(None, axis=1)
+    PPI_wide = PPI.pivot(index=["y", "m"], columns="LOCATION", values="Value").reset_index().rename_axis(None, axis=1)
     colnamesunemprate = PPI_wide.columns.tolist()
-    PPI_wide = unemployment_rate_wide.add_suffix('_unemprate')
+    PPI_wide = PPI_wide.add_suffix('_unemprate')
     PPI_wide.rename(columns = {'y_unemprate':'y', 'm_unemprate':'m'}, inplace = True)
     PPI_wide.drop([117], axis=0, inplace=True)
     PPI_wide["DATE"] = datelist 
