@@ -1,0 +1,141 @@
+Bundesamt für Meteorologie und Klimatologie, MeteoSchweiz
+Operation Center 1
+Postfach 257
+8058 Zürich-Flughafen
+
+stn yyyyMMddHHmm
+
+stn Stationskürzel
+y   Jahr
+M   Monat
+d   Tag
+H   Stunde
+m   Minute
+
+Zeitangaben in UTC: 00:40 UTC = 02:40 Sommerzeit
+                              = 01:40 Winterzeit
+
+Zeitbezug bei Stundenwerten, sofern in der Parameterbeschreibung nicht anders vermerkt: HH  = (HH-1):01 - HH:00
+Beispiel: 13 = beinhaltet Messperiode von 12:01 bis 13:00 
+
+Fehlende Messwerte sind gekenntzeichnet mit '-'
+
+Qualitätsinformationen: Die Legende zu den Qualitätsinformationen ist zu finden unter: https://gate.meteoswiss.ch/idaweb/text/datenqualitaet_legende_de.pdf
+
+ 
+
+
+
+
+Stationen
+---------
+stn       Name                                 Parameter        Datenquelle                                        Länge/Breite             Koordinaten [km] Höhe ü. M. [m]
+VDCHX     Château d'Oex                        rre150m0         Canton de Vaud                                     7°08'/46°28'             576150/146190    900
+VDCHX     Château d'Oex                        rsd010m0         Canton de Vaud                                     7°08'/46°28'             576150/146190    900
+VDCHX     Château d'Oex                        rsd100m0         Canton de Vaud                                     7°08'/46°28'             576150/146190    900
+VDCHX     Château d'Oex                        rs1000m0         Canton de Vaud                                     7°08'/46°28'             576150/146190    900
+VDCHX     Château d'Oex                        tnd00xm0         unknown                                            7°08'/46°28'             576150/146190    900
+VDCHX     Château d'Oex                        tnd00nm0         unknown                                            7°08'/46°28'             576150/146190    900
+VDCHX     Château d'Oex                        tnd30xm0         unknown                                            7°08'/46°28'             576150/146190    900
+VDCHX     Château d'Oex                        tre200m0         unknown                                            7°08'/46°28'             576150/146190    900
+VDCHX     Château d'Oex                        tre2dymx         unknown                                            7°08'/46°28'             576150/146190    900
+VDCHX     Château d'Oex                        tre2dymn         unknown                                            7°08'/46°28'             576150/146190    900
+VDCHX     Château d'Oex                        hns010mx         unknown                                            7°08'/46°28'             576150/146190    900
+VDCHX     Château d'Oex                        hns000m0         unknown                                            7°08'/46°28'             576150/146190    900
+VDCHX     Château d'Oex                        hto000m0         unknown                                            7°08'/46°28'             576150/146190    900
+CHD       Château-d'Oex                        rre150m0         MeteoSchweiz                                       7°08'/46°29'             577040/147654    1028
+CHD       Château-d'Oex                        rsd010m0         MeteoSchweiz                                       7°08'/46°29'             577040/147654    1028
+CHD       Château-d'Oex                        rsd100m0         MeteoSchweiz                                       7°08'/46°29'             577040/147654    1028
+CHD       Château-d'Oex                        rs1000m0         MeteoSchweiz                                       7°08'/46°29'             577040/147654    1028
+CHD       Château-d'Oex                        tnd00xm0         MeteoSchweiz                                       7°08'/46°29'             577040/147654    1028
+CHD       Château-d'Oex                        tnd00nm0         MeteoSchweiz                                       7°08'/46°29'             577040/147654    1028
+CHD       Château-d'Oex                        tnd30xm0         MeteoSchweiz                                       7°08'/46°29'             577040/147654    1028
+CHD       Château-d'Oex                        tre200m0         MeteoSchweiz                                       7°08'/46°29'             577040/147654    1028
+CHD       Château-d'Oex                        tre2dymx         MeteoSchweiz                                       7°08'/46°29'             577040/147654    1028
+CHD       Château-d'Oex                        tre2dymn         MeteoSchweiz                                       7°08'/46°29'             577040/147654    1028
+CHD       Château-d'Oex                        hns010mx         MeteoSchweiz                                       7°08'/46°29'             577040/147654    1028
+CHD       Château-d'Oex                        hns000m0         MeteoSchweiz                                       7°08'/46°29'             577040/147654    1028
+CHD       Château-d'Oex                        hto000m0         MeteoSchweiz                                       7°08'/46°29'             577040/147654    1028
+GSG       Gsteig, Gstaad                       rre150m0         MeteoSchweiz                                       7°17'/46°23'             587680/136130    1196
+GSG       Gsteig, Gstaad                       rsd010m0         MeteoSchweiz                                       7°17'/46°23'             587680/136130    1196
+GSG       Gsteig, Gstaad                       rsd100m0         MeteoSchweiz                                       7°17'/46°23'             587680/136130    1196
+GSG       Gsteig, Gstaad                       rs1000m0         MeteoSchweiz                                       7°17'/46°23'             587680/136130    1196
+GSG       Gsteig, Gstaad                       tnd00xm0         unknown                                            7°17'/46°23'             587680/136130    1196
+GSG       Gsteig, Gstaad                       tnd00nm0         unknown                                            7°17'/46°23'             587680/136130    1196
+GSG       Gsteig, Gstaad                       tnd30xm0         unknown                                            7°17'/46°23'             587680/136130    1196
+GSG       Gsteig, Gstaad                       tre200m0         unknown                                            7°17'/46°23'             587680/136130    1196
+GSG       Gsteig, Gstaad                       tre2dymx         unknown                                            7°17'/46°23'             587680/136130    1196
+GSG       Gsteig, Gstaad                       tre2dymn         unknown                                            7°17'/46°23'             587680/136130    1196
+GSG       Gsteig, Gstaad                       hns010mx         WSL-Institut für Schnee- und Lawinenforschung SLF  7°17'/46°23'             587680/136130    1196
+GSG       Gsteig, Gstaad                       hns000m0         WSL-Institut für Schnee- und Lawinenforschung SLF  7°17'/46°23'             587680/136130    1196
+GSG       Gsteig, Gstaad                       hto000m0         WSL-Institut für Schnee- und Lawinenforschung SLF  7°17'/46°23'             587680/136130    1196
+MMSAA     Saanen                               rre150m0         DTN Schweiz AG                                     7°15'/46°29'             585384/148476    1001
+MMSAA     Saanen                               rsd010m0         DTN Schweiz AG                                     7°15'/46°29'             585384/148476    1001
+MMSAA     Saanen                               rsd100m0         DTN Schweiz AG                                     7°15'/46°29'             585384/148476    1001
+MMSAA     Saanen                               rs1000m0         DTN Schweiz AG                                     7°15'/46°29'             585384/148476    1001
+MMSAA     Saanen                               tnd00xm0         DTN Schweiz AG                                     7°15'/46°29'             585384/148476    1001
+MMSAA     Saanen                               tnd00nm0         DTN Schweiz AG                                     7°15'/46°29'             585384/148476    1001
+MMSAA     Saanen                               tnd30xm0         DTN Schweiz AG                                     7°15'/46°29'             585384/148476    1001
+MMSAA     Saanen                               tre200m0         DTN Schweiz AG                                     7°15'/46°29'             585384/148476    1001
+MMSAA     Saanen                               tre2dymx         DTN Schweiz AG                                     7°15'/46°29'             585384/148476    1001
+MMSAA     Saanen                               tre2dymn         DTN Schweiz AG                                     7°15'/46°29'             585384/148476    1001
+MMSAA     Saanen                               hns010mx         unknown                                            7°15'/46°29'             585384/148476    1001
+MMSAA     Saanen                               hns000m0         unknown                                            7°15'/46°29'             585384/148476    1001
+MMSAA     Saanen                               hto000m0         unknown                                            7°15'/46°29'             585384/148476    1001
+SLF1SM    Saanenmoeser                         rre150m0         unknown                                            7°18'/46°31'             589170/151950    1390
+SLF1SM    Saanenmoeser                         rsd010m0         unknown                                            7°18'/46°31'             589170/151950    1390
+SLF1SM    Saanenmoeser                         rsd100m0         unknown                                            7°18'/46°31'             589170/151950    1390
+SLF1SM    Saanenmoeser                         rs1000m0         unknown                                            7°18'/46°31'             589170/151950    1390
+SLF1SM    Saanenmoeser                         tnd00xm0         unknown                                            7°18'/46°31'             589170/151950    1390
+SLF1SM    Saanenmoeser                         tnd00nm0         unknown                                            7°18'/46°31'             589170/151950    1390
+SLF1SM    Saanenmoeser                         tnd30xm0         unknown                                            7°18'/46°31'             589170/151950    1390
+SLF1SM    Saanenmoeser                         tre200m0         unknown                                            7°18'/46°31'             589170/151950    1390
+SLF1SM    Saanenmoeser                         tre2dymx         unknown                                            7°18'/46°31'             589170/151950    1390
+SLF1SM    Saanenmoeser                         tre2dymn         unknown                                            7°18'/46°31'             589170/151950    1390
+SLF1SM    Saanenmoeser                         hns010mx         WSL-Institut für Schnee- und Lawinenforschung SLF  7°18'/46°31'             589170/151950    1390
+SLF1SM    Saanenmoeser                         hns000m0         WSL-Institut für Schnee- und Lawinenforschung SLF  7°18'/46°31'             589170/151950    1390
+SLF1SM    Saanenmoeser                         hto000m0         WSL-Institut für Schnee- und Lawinenforschung SLF  7°18'/46°31'             589170/151950    1390
+MMZWE     Zweisimmen                           rre150m0         DTN Schweiz AG                                     7°23'/46°33'             595686/155358    933
+MMZWE     Zweisimmen                           rsd010m0         DTN Schweiz AG                                     7°23'/46°33'             595686/155358    933
+MMZWE     Zweisimmen                           rsd100m0         DTN Schweiz AG                                     7°23'/46°33'             595686/155358    933
+MMZWE     Zweisimmen                           rs1000m0         DTN Schweiz AG                                     7°23'/46°33'             595686/155358    933
+MMZWE     Zweisimmen                           tnd00xm0         DTN Schweiz AG                                     7°23'/46°33'             595686/155358    933
+MMZWE     Zweisimmen                           tnd00nm0         DTN Schweiz AG                                     7°23'/46°33'             595686/155358    933
+MMZWE     Zweisimmen                           tnd30xm0         DTN Schweiz AG                                     7°23'/46°33'             595686/155358    933
+MMZWE     Zweisimmen                           tre200m0         DTN Schweiz AG                                     7°23'/46°33'             595686/155358    933
+MMZWE     Zweisimmen                           tre2dymx         DTN Schweiz AG                                     7°23'/46°33'             595686/155358    933
+MMZWE     Zweisimmen                           tre2dymn         DTN Schweiz AG                                     7°23'/46°33'             595686/155358    933
+MMZWE     Zweisimmen                           hns010mx         unknown                                            7°23'/46°33'             595686/155358    933
+MMZWE     Zweisimmen                           hns000m0         unknown                                            7°23'/46°33'             595686/155358    933
+MMZWE     Zweisimmen                           hto000m0         unknown                                            7°23'/46°33'             595686/155358    933
+ZWE       Zweisimmen                           rre150m0         Kanton Bern                                        7°23'/46°33'             595870/155480    1015
+ZWE       Zweisimmen                           rsd010m0         Kanton Bern                                        7°23'/46°33'             595870/155480    1015
+ZWE       Zweisimmen                           rsd100m0         Kanton Bern                                        7°23'/46°33'             595870/155480    1015
+ZWE       Zweisimmen                           rs1000m0         Kanton Bern                                        7°23'/46°33'             595870/155480    1015
+ZWE       Zweisimmen                           tnd00xm0         Kanton Bern                                        7°23'/46°33'             595870/155480    1015
+ZWE       Zweisimmen                           tnd00nm0         Kanton Bern                                        7°23'/46°33'             595870/155480    1015
+ZWE       Zweisimmen                           tnd30xm0         Kanton Bern                                        7°23'/46°33'             595870/155480    1015
+ZWE       Zweisimmen                           tre200m0         Kanton Bern                                        7°23'/46°33'             595870/155480    1015
+ZWE       Zweisimmen                           tre2dymx         Kanton Bern                                        7°23'/46°33'             595870/155480    1015
+ZWE       Zweisimmen                           tre2dymn         Kanton Bern                                        7°23'/46°33'             595870/155480    1015
+ZWE       Zweisimmen                           hns010mx         MeteoSchweiz                                       7°23'/46°33'             595870/155480    1015
+ZWE       Zweisimmen                           hns000m0         MeteoSchweiz                                       7°23'/46°33'             595870/155480    1015
+ZWE       Zweisimmen                           hto000m0         MeteoSchweiz                                       7°23'/46°33'             595870/155480    1015
+
+Parameter
+---------
+          Einheit                              Beschreibung
+rre150m0  mm                                   Niederschlag; Monatssumme
+rsd010m0  No                                   Tage des Monats mit Niederschlagssumme >= 1.0 mm
+rsd100m0  No                                   Tage des Monats mit Niederschlagssumme >= 10.0 mm
+rs1000m0  No                                   Tage des Monats mit Niederschlagssumme >= 100 mm
+tnd00xm0  No                                   Eistage (Maximum tiefer als 0 Grad C); Monatssumme
+tnd00nm0  No                                   Frosttage (Minimum tiefer als 0 Grad C); Monatssumme
+tnd30xm0  No                                   Hitzetage (Maximum 30 Grad C oder höher); Monatssumme
+tre200m0  °C                                   Lufttemperatur 2 m über Boden; Monatsmittel
+tre2dymx  °C                                   Lufttemperatur 2 m über Boden; Monatsmittel der Tagesmaxima
+tre2dymn  °C                                   Lufttemperatur 2 m über Boden; Monatsmittel der Tagesminima
+hns010mx  cm                                   Neuschneehöhe; grösste 10-Tagessumme des Monats
+hns000m0  cm                                   Neuschneehöhe; Monatssumme der täglichen Messungen
+hto000m0  cm                                   Schneehöhe; Monatsmittel
+
