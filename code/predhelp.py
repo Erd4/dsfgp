@@ -1,10 +1,28 @@
-from pyaxis import pyaxis
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+import helpers as dsfh
+import missingno as msno
+import os
+from pathlib import Path
+from pyaxis import pyaxis
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA
+from sklearn.metrics import confusion_matrix, classification_report, roc_auc_score, roc_curve
 from sklearn.impute import KNNImputer
+from sklearn.experimental import enable_iterative_imputer
 from sklearn.impute import IterativeImputer
 from sklearn import linear_model
-import missingno as msno
+import statsmodels.api as sm
+#import statsmodels.api as sm #statsmodels is used for creating linear regression models
+from sklearn.model_selection import train_test_split #creating testing and training data
+from sklearn.metrics import roc_auc_score #evaluate model performance
+import predhelp as ph
+from scipy import stats
+from sklearn.preprocessing import PolynomialFeatures
 
 datelist = [pd.Timestamp('2013-01-01 00:00:00'),
  pd.Timestamp('2013-02-01 00:00:00'),
@@ -123,6 +141,108 @@ datelist = [pd.Timestamp('2013-01-01 00:00:00'),
  pd.Timestamp('2022-07-01 00:00:00'),
  pd.Timestamp('2022-08-01 00:00:00'),
  pd.Timestamp('2022-09-01 00:00:00')]
+regionlist = ['Adelboden',
+ 'Andermatt',
+ 'Anniviers',
+ 'Arosa',
+ 'Ascona',
+ 'Bad Ragaz',
+ 'Bad Zurzach',
+ 'Baden',
+ 'Bagnes',
+ 'Basel',
+ 'Beatenberg',
+ 'Bellinzona',
+ 'Bern',
+ 'Biel/Bienne',
+ 'Brienz (BE)',
+ 'Brig-Glis',
+ 'Bulle',
+ 'Celerina/Schlarigna',
+ 'Chur',
+ 'Crans-Montana',
+ 'Davos',
+ 'Disentis/Mustér',
+ 'Einsiedeln',
+ 'Engelberg',
+ 'Feusisberg',
+ 'Flims',
+ 'Freienbach',
+ 'Fribourg',
+ 'Gambarogno',
+ 'Genčve',
+ 'Glarus Nord',
+ 'Glarus Süd',
+ 'Grindelwald',
+ 'Hasliberg',
+ 'Ingenbohl',
+ 'Interlaken',
+ 'Kandersteg',
+ 'Kerns',
+ 'Klosters-Serneus',
+ 'Kloten',
+ 'Kriens',
+ 'Küssnacht (SZ)',
+ 'Laax',
+ 'Lausanne',
+ 'Lauterbrunnen',
+ 'Lenk',
+ 'Leukerbad',
+ 'Leysin',
+ 'Leytron',
+ 'Locarno',
+ 'Lugano',
+ 'Luzern',
+ 'Martigny',
+ 'Matten bei Interlaken',
+ 'Meiringen',
+ 'Meyrin',
+ 'Minusio',
+ 'Montana',
+ 'Montreux',
+ 'Morges',
+ 'Morschach',
+ 'Muralto',
+ 'Neuchâtel',
+ 'Ollon',
+ 'Olten',
+ 'Opfikon',
+ 'Ormont-Dessus',
+ 'Paradiso',
+ 'Pontresina',
+ 'Pratteln',
+ 'Quarten',
+ 'Saanen',
+ 'Saas-Fee',
+ 'Sachseln',
+ 'Samedan',
+ 'Samnaun',
+ 'Schaffhausen',
+ 'Schwende',
+ 'Scuol',
+ 'Sigriswil',
+ 'Sils im Engadin/Segl',
+ 'Silvaplana',
+ 'Sion',
+ 'Solothurn',
+ 'Spiez',
+ 'St. Gallen',
+ 'St. Moritz',
+ 'Thun',
+ 'Täsch',
+ 'Unterseen',
+ 'Val de Bagnes',
+ 'Vals',
+ 'Vaz/Obervaz',
+ 'Vevey',
+ 'Weggis',
+ 'Wilderswil',
+ 'Wildhaus-Alt St. Johann',
+ 'Winterthur',
+ 'Zermatt',
+ 'Zernez',
+ 'Zug',
+ 'Zürich']
 
 def dict_clean (px_data_url, regions):
     px = rf'{px_data_url}'
@@ -228,9 +348,29 @@ def dict_clean (px_data_url, regions):
         dict_regions[i][regions[i]]['DATE'] = pd.to_datetime(dict_regions[i][regions[i]][['year','month']].assign(DAY = 1))
         dict_regions[i][regions[i]].drop(labels = ['year', 'month'], axis = 1, inplace = True)
     for i in range(0, len(dict_regions)):
-        dict_regions[i][regions[i]] = dict_regions[i][regions[i]].pivot(index =  ['DATE'],columns = 'Herkunftsland', values = 'DATA').reset_index().rename_axis(None, axis=1)
-     
+        dict_regions[i][regions[i]] = dict_regions[i][regions[i]].pivot(index =  ['DATE'],columns = 'Herkunftsland', values = 'DATA').reset_index().rename_axis(None, axis=1) 
     return(dict_regions, all_regions)
+
+def get_region(pxurl,regionen,vergleich1,vergleich2,vergleich3):
+    newlist =[regionen]
+    listeverg1 = [vergleich1]
+    listeverg2 = [vergleich2]
+    listeverg3 = [vergleich3]
+    xxxxx, yyy = dict_clean(pxurl,newlist)
+    xxxx, yyyy = dict_clean(pxurl,listeverg1)
+    xxxxxx, yyyyy = dict_clean(pxurl,listeverg2)
+    xxxxxxx, yyyyyy = dict_clean(pxurl,listeverg3)
+    df_region = xxxxx[newlist.index(regionen)][regionen]
+    a = xxxx[listeverg1.index(vergleich1)][vergleich1]
+    a = a["Herkunftsland - Total"]
+    df_region["guests-"+vergleich1] = a
+    b = xxxxxx[listeverg2.index(vergleich2)][vergleich2]
+    b = b["Herkunftsland - Total"]
+    df_region["guests-"+vergleich2] = b
+    c = xxxxxxx[listeverg3.index(vergleich3)][vergleich3]
+    c = c["Herkunftsland - Total"]
+    df_region["guests-"+vergleich3] = c
+    return(df_region)
 
 def gdp_clean (csv_data_url):
     gdp = pd.read_csv(f'{csv_data_url}')
@@ -261,13 +401,13 @@ def gdp_clean (csv_data_url):
     totallynewdf[["SAU_GDP","RUS_GDP"]] = pd.DataFrame(np.repeat(df_mice_imputed[["SAU_GDP","RUS_GDP"]].values, 3, axis=0))
     totallynewdf['q'] = np.tile(list_int, len(totallynewdf)//len(list_int) + 1)[:len(totallynewdf)]
     totallynewdf.rename(columns={"q":"month"}, inplace=True)
-    totallynewdf['DATE'] = pd.to_datetime(totallynewdf[['year', 'month']].assign(DAY=1))
+    #totallynewdf['DATE'] = pd.to_datetime(totallynewdf[['year', 'month']].assign(DAY=1))
     totallynewdf.drop(["year","month"], axis=1, inplace=True)
     return(totallynewdf)
 
 def forex_clean (csv_data_url):
     exchange_rate = pd.read_csv(f"{csv_data_url}", sep = ";", skiprows = 2)
-    exchange_rate[["y","m"]] = exchange_rate["DATE"].str.split("-",expand=True)
+    #exchange_rate[["y","m"]] = exchange_rate["DATE"].str.split("-",expand=True)
     exchange_rate["y"] = exchange_rate["y"].astype(int)
     del exchange_rate["DATE"]
     del exchange_rate["D0"]
@@ -276,7 +416,7 @@ def forex_clean (csv_data_url):
     colnamesexrate = exchange_rate_wide.columns.tolist()
     exchange_rate_wide = exchange_rate_wide.add_suffix('_exrate')
     exchange_rate_wide.rename(columns = {'y_exrate':'Year', 'm_exrate':'Month'}, inplace = True)
-    exchange_rate_wide['DATE'] = pd.to_datetime(exchange_rate_wide[['Year', 'Month']].assign(DAY=1))
+    #exchange_rate_wide['DATE'] = pd.to_datetime(exchange_rate_wide[['Year', 'Month']].assign(DAY=1))
     exchange_rate_wide.drop([117], axis=0, inplace=True)
     del exchange_rate_wide["Year"]
     del exchange_rate_wide["Month"]
@@ -294,7 +434,7 @@ def ppi_clean(ppi_data_csv_url):
     PPI_wide = PPI_wide.add_suffix('_unemprate')
     PPI_wide.rename(columns = {'y_unemprate':'y', 'm_unemprate':'m'}, inplace = True)
     PPI_wide.drop([117], axis=0, inplace=True)
-    PPI_wide["DATE"] = datelist 
+    #PPI_wide["DATE"] = datelist 
     PPI_wide.drop(labels = ['y','m'], axis = 1, inplace = True)
     for i in PPI_wide.columns[PPI_wide.isnull().any(axis=0)]:     #---Applying Only on variables with NaN values
         PPI_wide[i].fillna(PPI_wide[i].mean(),inplace=True)
@@ -302,29 +442,26 @@ def ppi_clean(ppi_data_csv_url):
 
 def weather_clean(csv_url):
     xxx = pd.read_csv(csv_url, sep=";")
+    del xxx["stn"]
+    del xxx["time"]
     weather_dict = {
-        "tnd00xm0":"eistage",
-        "tnd00nm0":"frosttage",
-        "tnd30xm0":"hitzetage",
-        "tre200m0":"avg. temp",
-        "tre2dymx":"avg. maxtemp",
-        "hns010mx":"cm neuschnee max10day",
-        "hns000m0":"cm neuschnee",
-        "rre150m0":"mm rain",
-        "hto000m0":"cm avg. snowheight",
-        "rsd010m0":"days rain >1mm",
-        "rsd100m0":"days rain >10mm",
-        "rs1000m0":"days rain >100mm",
-        "stn":"standort",
-        "time":"DATE"}
+        "tnd00xm0":"eistage - "+ Path(csv_url).stem,
+        "tnd00nm0":"frosttage - "+ Path(csv_url).stem,
+        "tnd30xm0":"hitzetage - "+ Path(csv_url).stem,
+        "tre200m0":"avg. temp - "+ Path(csv_url).stem,
+        "tre2dymx":"avg. maxtemp - "+ Path(csv_url).stem,
+        "hns010mx":"cm neuschnee max10day -"+ Path(csv_url).stem,
+        "hns000m0":"cm neuschnee - "+ Path(csv_url).stem,
+        "rre150m0":"mm rain - "+ Path(csv_url).stem,
+        "hto000m0":"cm avg. snowheight - "+ Path(csv_url).stem,
+        "rsd010m0":"days rain >1mm - "+ Path(csv_url).stem,
+        "rsd100m0":"days rain >10mm - "+ Path(csv_url).stem,
+        "rs1000m0":"days rain >100mm - "+ Path(csv_url).stem,}
     xxx = xxx.rename(columns=weather_dict)
     if 117 in xxx.index:
         xxx.drop(index=[117], inplace=True)
         return(xxx)
-    xxx["time"] = datelist 
     return(xxx)
 
 def show_na(dfs):
     return(msno.matrix(dfs))
- 
-datelist.shape()
