@@ -4,6 +4,7 @@ import numpy as np
 from sklearn.impute import KNNImputer
 from sklearn.impute import IterativeImputer
 from sklearn import linear_model
+import missingno as msno
 
 datelist = [pd.Timestamp('2013-01-01 00:00:00'),
  pd.Timestamp('2013-02-01 00:00:00'),
@@ -298,4 +299,32 @@ def ppi_clean(ppi_data_csv_url):
     for i in PPI_wide.columns[PPI_wide.isnull().any(axis=0)]:     #---Applying Only on variables with NaN values
         PPI_wide[i].fillna(PPI_wide[i].mean(),inplace=True)
     return(PPI_wide)
+
+def weather_clean(csv_url):
+    xxx = pd.read_csv(csv_url, sep=";")
+    weather_dict = {
+        "tnd00xm0":"eistage",
+        "tnd00nm0":"frosttage",
+        "tnd30xm0":"hitzetage",
+        "tre200m0":"avg. temp",
+        "tre2dymx":"avg. maxtemp",
+        "hns010mx":"cm neuschnee max10day",
+        "hns000m0":"cm neuschnee",
+        "rre150m0":"mm rain",
+        "hto000m0":"cm avg. snowheight",
+        "rsd010m0":"days rain >1mm",
+        "rsd100m0":"days rain >10mm",
+        "rs1000m0":"days rain >100mm",
+        "stn":"standort",
+        "time":"DATE"}
+    xxx = xxx.rename(columns=weather_dict)
+    if 117 in xxx.index:
+        xxx.drop(index=[117], inplace=True)
+        return(xxx)
+    xxx["time"] = datelist 
+    return(xxx)
+
+def show_na(dfs):
+    return(msno.matrix(dfs))
  
+datelist.shape()
