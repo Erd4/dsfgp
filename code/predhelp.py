@@ -24,6 +24,12 @@ import predhelp as ph
 from scipy import stats
 from sklearn.preprocessing import PolynomialFeatures
 
+seasons = {
+             1: 'Winter',
+             2: 'Spring',
+             3: 'Summer',
+             4: 'Autumn'}
+
 datelist = [pd.Timestamp('2013-01-01 00:00:00'),
  pd.Timestamp('2013-02-01 00:00:00'),
  pd.Timestamp('2013-03-01 00:00:00'),
@@ -444,6 +450,8 @@ def weather_clean(csv_url):
     xxx = pd.read_csv(csv_url, sep=";")
     del xxx["stn"]
     del xxx["time"]
+    del xxx["hns010mx"]
+    del xxx["rs1000m0"]
     weather_dict = {
         "tnd00xm0":"eistage - "+ Path(csv_url).stem,
         "tnd00nm0":"frosttage - "+ Path(csv_url).stem,
@@ -458,6 +466,7 @@ def weather_clean(csv_url):
         "rsd100m0":"days rain >10mm - "+ Path(csv_url).stem,
         "rs1000m0":"days rain >100mm - "+ Path(csv_url).stem,}
     xxx = xxx.rename(columns=weather_dict)
+    xxx = xxx.replace({"-":0})
     if 117 in xxx.index:
         xxx.drop(index=[117], inplace=True)
         return(xxx)
@@ -465,3 +474,31 @@ def weather_clean(csv_url):
 
 def show_na(dfs):
     return(msno.matrix(dfs))
+
+def unemployment_clean (csv_data_url):
+    unemployment_rate = pd.read_csv(f'{csv_data_url}')
+    unemployment_rate[["y","m"]] = unemployment_rate["TIME"].str.split("-",expand=True)
+    unemployment_rate["y"] = unemployment_rate["y"].astype(int)
+    unemployment_rate = unemployment_rate.loc[unemployment_rate["y"]>=2013].reset_index()
+    unemployment_rate.drop(labels = ['INDICATOR','SUBJECT','MEASURE','FREQUENCY','Flag Codes'], axis = 1, inplace = True)
+    unemployment_rate.rename(columns={"LOCATION":"iso"}, inplace = True)
+    unemployment_rate_wide = unemployment_rate.pivot(index=['y', 'm'], columns="iso", values="Value").reset_index().rename_axis(None, axis=1)
+    unemployment_rate_wide.drop([117], axis=0, inplace=True)
+    unemployment_rate_wide.drop(columns=["y","m"], axis=1, inplace=True)
+    unemployment_rate_wide = unemployment_rate_wide.add_suffix('_unemprate')
+    unemployment_rate_wide['DATE'] = datelist
+    for i in unemployment_rate_wide.columns[unemployment_rate_wide.isnull().any(axis=0)]:     #---Applying Only on variables with NaN values
+        unemployment_rate_wide[i].fillna(unemployment_rate_wide[i].mean(),inplace=True)
+
+    return(unemployment_rate_wide)
+
+def split_seasons(df):
+    df['Date'] = pd.to_datetime(df.DATE, format='%Y-%m-%d')
+    df['season'] = (df['Date'].dt.month%12 + 3)//3
+    df['season_name'] = df['season'].map(seasons)
+
+    w = df[df["season"] == 1].reset_index().drop(columns=["index","DATE","Date","season","season_name"])
+    f = df[df["season"] == 2].reset_index().drop(columns=["index","DATE","Date","season","season_name"])
+    s = df[df["season"] == 3].reset_index().drop(columns=["index","DATE","Date","season","season_name"])
+    h = df[df["season"] == 4].reset_index().drop(columns=["index","DATE","Date","season","season_name"])
+    return(w,f,s,h)
