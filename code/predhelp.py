@@ -1,11 +1,12 @@
+import helpers as dsfh
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-import helpers as dsfh
+sns.set(style="whitegrid")
+
+
 import missingno as msno
-import os
-from pathlib import Path
 from pyaxis import pyaxis
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
@@ -16,13 +17,32 @@ from sklearn.impute import KNNImputer
 from sklearn.experimental import enable_iterative_imputer
 from sklearn.impute import IterativeImputer
 from sklearn import linear_model
-import statsmodels.api as sm
-#import statsmodels.api as sm #statsmodels is used for creating linear regression models
-from sklearn.model_selection import train_test_split #creating testing and training data
-from sklearn.metrics import roc_auc_score #evaluate model performance
-import predhelp as ph
-from scipy import stats
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import roc_auc_score
 from sklearn.preprocessing import PolynomialFeatures
+
+import statsmodels.api as sm
+from statsmodels.tsa.seasonal import seasonal_decompose
+from statsmodels.tsa.arima_model import ARIMA
+from statsmodels.tsa.statespace.sarimax import SARIMAX
+from statsmodels.tsa.stattools import adfuller
+from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
+
+from scipy import stats
+
+from datetime import date
+from datetime import timedelta
+from time import time
+import predhelp as ph
+from pylab import rcParams
+from pandas.plotting import register_matplotlib_converters
+
+register_matplotlib_converters()
+
+import warnings
+warnings.filterwarnings('ignore')
+
+RANDOM_SEED = np.random.seed(0)
 
 seasons = {
              1: 'Winter',
@@ -502,3 +522,13 @@ def split_seasons(df):
     s = df[df["season"] == 3].reset_index().drop(columns=["index","DATE","Date","season","season_name"])
     h = df[df["season"] == 4].reset_index().drop(columns=["index","DATE","Date","season","season_name"])
     return(w,f,s,h)
+
+def check_stationarity(ts):
+    dftest = adfuller(ts)
+    adf = dftest[0]
+    pvalue = dftest[1]
+    critical_value = dftest[4]['5%']
+    if (pvalue < 0.05) and (adf < critical_value):
+        print('The series is stationary')
+    else:
+        print('The series is NOT stationary')
