@@ -1,6 +1,9 @@
 import helpers as dsfh
 import pandas as pd
 import numpy as np
+import glob
+import os
+from pathlib import Path
 import matplotlib.pyplot as plt
 import seaborn as sns
 sns.set(style="whitegrid")
@@ -433,21 +436,20 @@ def gdp_clean (csv_data_url):
 
 def forex_clean (csv_data_url):
     exchange_rate = pd.read_csv(f"{csv_data_url}", sep = ";", skiprows = 2)
-    #exchange_rate[["y","m"]] = exchange_rate["DATE"].str.split("-",expand=True)
+    exchange_rate[["y","m"]] = exchange_rate["Date"].str.split("-",expand=True)
     exchange_rate["y"] = exchange_rate["y"].astype(int)
-    del exchange_rate["DATE"]
+    del exchange_rate["Date"]
     del exchange_rate["D0"]
     exchange_rate = exchange_rate.loc[exchange_rate["y"]>=2013].reset_index()
     exchange_rate_wide = exchange_rate.pivot(index=["y", "m"], columns="D1", values="Value").reset_index().rename_axis(None, axis=1)
     colnamesexrate = exchange_rate_wide.columns.tolist()
     exchange_rate_wide = exchange_rate_wide.add_suffix('_exrate')
     exchange_rate_wide.rename(columns = {'y_exrate':'Year', 'm_exrate':'Month'}, inplace = True)
-    #exchange_rate_wide['DATE'] = pd.to_datetime(exchange_rate_wide[['Year', 'Month']].assign(DAY=1))
+    del exchange_rate_wide["Year"]
+    del exchange_rate_wide["Month"]
     if 117 in exchange_rate_wide.index:
         exchange_rate_wide.drop(index=[117], inplace=True)
         return(exchange_rate_wide)
-    del exchange_rate_wide["Year"]
-    del exchange_rate_wide["Month"]
     return(exchange_rate_wide)
 
 def ppi_clean(ppi_data_csv_url):
@@ -461,8 +463,10 @@ def ppi_clean(ppi_data_csv_url):
     colnamesunemprate = PPI_wide.columns.tolist()
     PPI_wide = PPI_wide.add_suffix('_unemprate')
     PPI_wide.rename(columns = {'y_unemprate':'y', 'm_unemprate':'m'}, inplace = True)
-    PPI_wide.drop([117], axis=0, inplace=True)
-    #PPI_wide["DATE"] = datelist 
+    if 117 in PPI_wide.index:
+        PPI_wide.drop(index=[117], inplace=True)
+        return(PPI_wide)
+    PPI_wide["DATE"] = datelist 
     PPI_wide.drop(labels = ['y','m'], axis = 1, inplace = True)
     for i in PPI_wide.columns[PPI_wide.isnull().any(axis=0)]:     #---Applying Only on variables with NaN values
         PPI_wide[i].fillna(PPI_wide[i].mean(),inplace=True)
@@ -507,6 +511,9 @@ def unemployment_clean (csv_data_url):
     unemployment_rate_wide = unemployment_rate.pivot(index=['y', 'm'], columns="iso", values="Value").reset_index().rename_axis(None, axis=1)
     unemployment_rate_wide.drop(columns=["y","m"], axis=1, inplace=True)
     unemployment_rate_wide = unemployment_rate_wide.add_suffix('_unemprate')
+    if 117 in unemployment_rate_wide.index:
+        unemployment_rate_wide.drop(index=[117], inplace=True)
+        return(unemployment_rate_wide)
     unemployment_rate_wide['DATE'] = datelist
     for i in unemployment_rate_wide.columns[unemployment_rate_wide.isnull().any(axis=0)]:     #---Applying Only on variables with NaN values
         unemployment_rate_wide[i].fillna(unemployment_rate_wide[i].mean(),inplace=True)
