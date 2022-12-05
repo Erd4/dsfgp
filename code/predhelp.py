@@ -25,7 +25,7 @@ import statsmodels.api as sm
 from statsmodels.tsa.seasonal import seasonal_decompose
 from statsmodels.tsa.arima_model import ARIMA
 from statsmodels.tsa.statespace.sarimax import SARIMAX
-from statsmodels.tsa.stattools import adfuller
+from statsmodels.tsa.stattools import adfuller, kpss
 from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
 
 from scipy import stats
@@ -443,7 +443,9 @@ def forex_clean (csv_data_url):
     exchange_rate_wide = exchange_rate_wide.add_suffix('_exrate')
     exchange_rate_wide.rename(columns = {'y_exrate':'Year', 'm_exrate':'Month'}, inplace = True)
     #exchange_rate_wide['DATE'] = pd.to_datetime(exchange_rate_wide[['Year', 'Month']].assign(DAY=1))
-    exchange_rate_wide.drop([117], axis=0, inplace=True)
+    if 117 in exchange_rate_wide.index:
+        exchange_rate_wide.drop(index=[117], inplace=True)
+        return(exchange_rate_wide)
     del exchange_rate_wide["Year"]
     del exchange_rate_wide["Month"]
     return(exchange_rate_wide)
@@ -503,7 +505,6 @@ def unemployment_clean (csv_data_url):
     unemployment_rate.drop(labels = ['INDICATOR','SUBJECT','MEASURE','FREQUENCY','Flag Codes'], axis = 1, inplace = True)
     unemployment_rate.rename(columns={"LOCATION":"iso"}, inplace = True)
     unemployment_rate_wide = unemployment_rate.pivot(index=['y', 'm'], columns="iso", values="Value").reset_index().rename_axis(None, axis=1)
-    unemployment_rate_wide.drop([117], axis=0, inplace=True)
     unemployment_rate_wide.drop(columns=["y","m"], axis=1, inplace=True)
     unemployment_rate_wide = unemployment_rate_wide.add_suffix('_unemprate')
     unemployment_rate_wide['DATE'] = datelist
@@ -524,11 +525,19 @@ def split_seasons(df):
     return(w,f,s,h)
 
 def check_stationarity(ts):
-    dftest = adfuller(ts)
-    adf = dftest[0]
-    pvalue = dftest[1]
-    critical_value = dftest[4]['5%']
-    if (pvalue < 0.05) and (adf < critical_value):
-        print('The series is stationary')
+    dftestdf = adfuller(ts)
+    adf = dftestdf[0]
+    adfpvalue = dftestdf[1]
+    adfcritical_value = dftestdf[4]['5%']
+    if (adfpvalue < 0.05) and (adf < adfcritical_value):
+        print('The series is stationary according to Dickey-Fuller')
     else:
-        print('The series is NOT stationary')
+        print('The series is NOT stationary according to Dickey-Fuller')
+    dftestkpss = kpss(ts)
+    akpss = dftestkpss[0]
+    kpsspvalue = dftestkpss[1]
+    kpsscritical_value = dftestkpss[3]['5%']
+    if (kpsspvalue < 0.05) and (akpss < kpsscritical_value):
+        print('The series is stationary according to Kwiatkowski-Phillips-Schmidt-Shin')
+    else:
+        print('The series is NOT stationary according to Kwiatkowski-Phillips-Schmidt-Shin')
